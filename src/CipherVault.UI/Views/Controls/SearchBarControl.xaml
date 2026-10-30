@@ -1,0 +1,78 @@
+<UserControl x:Class="CipherVault.UI.Views.Controls.SearchBarControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:CipherVault.UI.Converters"
+             xmlns:h="clr-namespace:CipherVault.UI.Helper"
+             mc:Ignorable="d"
+             d:DesignWidth="300" d:DesignHeight="36"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Search icon -->
+        <h:AppIcon Icon="{x:Static h:Icon.Search}"
+                   Size="14"
+                   Panel.ZIndex="1"
+                   Foreground="{DynamicResource BrushTextTertiary}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   Margin="10,0,0,0"
+                   IsHitTestVisible="False" />
+
+        <!-- Search input -->
+        <TextBox x:Name="SearchBox"
+                 Style="{StaticResource FlatTextBox}"
+                 Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 Padding="32,5,32,5"
+                 Height="36"
+                 VerticalContentAlignment="Center"
+                 Tag="搜索条目..."
+                 GotFocus="SearchBox_GotFocus" />
+
+        <!-- Placeholder text (shown when empty) -->
+        <TextBlock Text="搜索条目..."
+                   FontSize="{DynamicResource FontSizeBody}"
+                   Foreground="{DynamicResource BrushTextTertiary}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   Margin="34,0,0,0"
+                   IsHitTestVisible="False">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <!-- Clear button -->
+        <Button x:Name="ClearButton"
+                Width="24" Height="24"
+                Panel.ZIndex="2"
+                HorizontalAlignment="Right"
+                Margin="0,0,6,0"
+                Click="ClearButton_Click"
+                ToolTip="清除搜索">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <h:AppIcon Icon="{x:Static h:Icon.X}" Size="10" />
+        </Button>
+    </Grid>
+</UserControl>
+

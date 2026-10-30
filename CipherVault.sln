@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{43F0614E-DC1D-436A-AC36-4172353DD7BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherVault.App", "src\CipherVault.App\CipherVault.App.csproj", "{EA6C2E63-51E5-4728-A39F-F15EC76974E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherVault.Core", "src\CipherVault.Core\CipherVault.Core.csproj", "{DC0721ED-0811-4F90-AD7D-FA8A5489C42D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherVault.Infrastructure", "src\CipherVault.Infrastructure\CipherVault.Infrastructure.csproj", "{9BAF3240-2AFF-402F-AEEB-AAF182BFE023}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherVault.UI", "src\CipherVault.UI\CipherVault.UI.csproj", "{B27472BA-EF8D-4D7B-95B2-E0BCEFAEFD5D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3E6BF87C-DC2A-4E6D-A178-34BC06D1B93A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherVault.Infrastructure.Tests", "tests\CipherVault.Infrastructure.Tests\CipherVault.Infrastructure.Tests.csproj", "{A43186EE-96C1-4F57-9E3B-66D2CD5D19B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherVault.UI.Tests", "tests\CipherVault.UI.Tests\CipherVault.UI.Tests.csproj", "{B5E46F71-59D9-45D8-9CC4-A4C95ADCC39F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA6C2E63-51E5-4728-A39F-F15EC76974E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA6C2E63-51E5-4728-A39F-F15EC76974E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA6C2E63-51E5-4728-A39F-F15EC76974E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA6C2E63-51E5-4728-A39F-F15EC76974E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC0721ED-0811-4F90-AD7D-FA8A5489C42D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC0721ED-0811-4F90-AD7D-FA8A5489C42D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC0721ED-0811-4F90-AD7D-FA8A5489C42D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC0721ED-0811-4F90-AD7D-FA8A5489C42D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BAF3240-2AFF-402F-AEEB-AAF182BFE023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BAF3240-2AFF-402F-AEEB-AAF182BFE023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BAF3240-2AFF-402F-AEEB-AAF182BFE023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BAF3240-2AFF-402F-AEEB-AAF182BFE023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B27472BA-EF8D-4D7B-95B2-E0BCEFAEFD5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B27472BA-EF8D-4D7B-95B2-E0BCEFAEFD5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B27472BA-EF8D-4D7B-95B2-E0BCEFAEFD5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B27472BA-EF8D-4D7B-95B2-E0BCEFAEFD5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A43186EE-96C1-4F57-9E3B-66D2CD5D19B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A43186EE-96C1-4F57-9E3B-66D2CD5D19B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A43186EE-96C1-4F57-9E3B-66D2CD5D19B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A43186EE-96C1-4F57-9E3B-66D2CD5D19B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5E46F71-59D9-45D8-9CC4-A4C95ADCC39F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5E46F71-59D9-45D8-9CC4-A4C95ADCC39F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5E46F71-59D9-45D8-9CC4-A4C95ADCC39F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5E46F71-59D9-45D8-9CC4-A4C95ADCC39F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EA6C2E63-51E5-4728-A39F-F15EC76974E7} = {43F0614E-DC1D-436A-AC36-4172353DD7BC}
+		{DC0721ED-0811-4F90-AD7D-FA8A5489C42D} = {43F0614E-DC1D-436A-AC36-4172353DD7BC}
+		{9BAF3240-2AFF-402F-AEEB-AAF182BFE023} = {43F0614E-DC1D-436A-AC36-4172353DD7BC}
+		{B27472BA-EF8D-4D7B-95B2-E0BCEFAEFD5D} = {43F0614E-DC1D-436A-AC36-4172353DD7BC}
+		{A43186EE-96C1-4F57-9E3B-66D2CD5D19B0} = {3E6BF87C-DC2A-4E6D-A178-34BC06D1B93A}
+		{B5E46F71-59D9-45D8-9CC4-A4C95ADCC39F} = {3E6BF87C-DC2A-4E6D-A178-34BC06D1B93A}
+	EndGlobalSection
+EndGlobal

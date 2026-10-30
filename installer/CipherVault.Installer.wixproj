@@ -1,0 +1,20 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.15</ProductVersion>
+    <DefineConstants>ProductVersion=$(ProductVersion)</DefineConstants>
+    <OutputName>CipherVault-Setup-$(ProductVersion)-win-x64</OutputName>
+    <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\installer\</OutputPath>
+    <PublishDirectory>$(MSBuildThisFileDirectory)..\artifacts\portable\win-x64</PublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BindPath Include="$(PublishDirectory)" BindName="publish" />
+  </ItemGroup>
+
+  <Target Name="EnsurePortablePublishExists" BeforeTargets="Build">
+    <Error Condition="!Exists('$(PublishDirectory)\CipherVault.exe')"
+           Text="Portable publish not found. Run build-installer.ps1 from the repository root first." />
+  </Target>
+</Project>

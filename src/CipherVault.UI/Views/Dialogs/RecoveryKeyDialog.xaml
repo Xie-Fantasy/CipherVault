@@ -1,0 +1,202 @@
+<Window x:Class="CipherVault.UI.Views.Dialogs.RecoveryKeyDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:CipherVault.UI.Converters"
+        xmlns:h="clr-namespace:CipherVault.UI.Helper"
+        mc:Ignorable="d"
+        Title="恢复密钥"
+        Width="520" Height="570"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="{DynamicResource BrushBackground}"
+        WindowStyle="None"
+        AllowsTransparency="False">
+
+    <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisInv" IsInverted="True" />
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      CornerRadius="12"
+                      GlassFrameThickness="0"
+                      ResizeBorderThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border CornerRadius="12"
+            Background="{DynamicResource BrushBackground}"
+            BorderBrush="{DynamicResource BrushBorder}"
+            BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="0" BlurRadius="20" Opacity="0.15" />
+        </Border.Effect>
+
+        <Grid Margin="32">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />  <!-- Header -->
+                <RowDefinition Height="*" />      <!-- Content -->
+                <RowDefinition Height="Auto" />  <!-- Buttons -->
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <h:AppIcon Grid.Column="0"
+                           Icon="{x:Static h:Icon.Unlock}"
+                           Size="20"
+                           Foreground="{DynamicResource BrushPrimary}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0" />
+
+                <TextBlock Grid.Column="1"
+                           x:Name="TitleText"
+                           Text="恢复密钥"
+                           FontSize="{DynamicResource FontSizeTitle}"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource BrushTextPrimary}"
+                           VerticalAlignment="Center" />
+
+                <Button Grid.Column="2"
+                        Style="{StaticResource IconButton}"
+                        Click="CloseButton_Click"
+                        ToolTip="关闭">
+                    <h:AppIcon Icon="{x:Static h:Icon.X}" Size="14" />
+                </Button>
+            </Grid>
+
+            <!-- Content -->
+            <Grid Grid.Row="1">
+                <!-- Display mode: show words in 4x3 grid -->
+                <StackPanel x:Name="DisplayPanel" Visibility="Visible">
+                    <TextBlock Text="请仔细抄写以下 12 个词，这是您恢复保险库的唯一方式。"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12" />
+
+                    <!-- Warning -->
+                    <Border Background="{DynamicResource BrushDangerSubtle}"
+                            CornerRadius="6"
+                            Padding="12,8"
+                            Margin="0,0,0,16">
+                        <StackPanel Orientation="Horizontal">
+                            <h:AppIcon Icon="{x:Static h:Icon.AlertTriangle}"
+                                       Size="14"
+                                       Foreground="{DynamicResource BrushDanger}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0" />
+                            <TextBlock Text="请手抄保存，不要截图或拍照！"
+                                       FontSize="{DynamicResource FontSizeCaption}"
+                                       Foreground="{DynamicResource BrushDanger}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Word grid -->
+                    <ItemsControl x:Name="WordGrid"
+                                  ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3" Rows="4" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource BrushSurface}"
+                                        BorderBrush="{DynamicResource BrushBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        Padding="8,8"
+                                        Margin="3">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Index}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   Foreground="{DynamicResource BrushTextTertiary}"
+                                                   Width="18"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Word}"
+                                                   FontSize="{DynamicResource FontSizeBody}"
+                                                   FontWeight="Medium"
+                                                   Foreground="{DynamicResource BrushTextPrimary}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Input mode: enter recovery words -->
+                <StackPanel x:Name="InputPanel" Visibility="Collapsed">
+                    <TextBlock Text="请输入您的 12 个恢复密钥词（用空格分隔）："
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12" />
+
+                    <TextBox x:Name="RecoveryInput"
+                             Style="{StaticResource FlatTextBox}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             MinHeight="120"
+                             VerticalScrollBarVisibility="Auto"
+                             FontSize="{DynamicResource FontSizeBody}"
+                             FontFamily="{StaticResource FontMono}" />
+
+                    <TextBlock Text="设置新的主密码（6–128 个字符）"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               Margin="0,14,0,6" />
+                    <PasswordBox x:Name="NewPasswordInput"
+                                  MaxLength="128"
+                                  MinHeight="36"
+                                 Padding="10,7" />
+
+                    <TextBlock Text="确认新的主密码"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               Margin="0,10,0,6" />
+                    <PasswordBox x:Name="ConfirmPasswordInput"
+                                  MaxLength="128"
+                                  MinHeight="36"
+                                 Padding="10,7" />
+
+                    <!-- Error message -->
+                    <TextBlock x:Name="InputError"
+                               Text=""
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushDanger}"
+                               Margin="0,8,0,0"
+                               Visibility="Collapsed" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,16,0,0">
+                <Button Style="{StaticResource GhostButton}"
+                        x:Name="CancelButton"
+                        Content="取消"
+                        Click="CancelButton_Click"
+                        Width="80"
+                        Margin="0,0,8,0" />
+                <Button Style="{StaticResource FlatButton}"
+                        x:Name="ConfirmButton"
+                        Content="确认"
+                        Click="ConfirmButton_Click"
+                        Width="100"
+                        Visibility="Collapsed" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

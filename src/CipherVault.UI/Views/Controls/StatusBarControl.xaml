@@ -1,0 +1,121 @@
+<UserControl x:Class="CipherVault.UI.Views.Controls.StatusBarControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:CipherVault.UI.Converters"
+             xmlns:h="clr-namespace:CipherVault.UI.Helper"
+             mc:Ignorable="d"
+             d:DesignWidth="800" d:DesignHeight="28"
+             Background="{DynamicResource BrushSurface}">
+
+    <UserControl.Resources>
+        <conv:DateTimeToRelativeConverter x:Key="RelativeTime" />
+    </UserControl.Resources>
+
+    <Border BorderBrush="{DynamicResource BrushBorder}"
+            BorderThickness="0,1,0,0"
+            Padding="16,6">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left side: status info -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Lock status icon: unlocked -->
+                <h:AppIcon Icon="{x:Static h:Icon.Unlock}" Size="12"
+                           Foreground="{DynamicResource BrushSuccess}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,6,0">
+                    <h:AppIcon.Style>
+                        <Style TargetType="h:AppIcon">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </h:AppIcon.Style>
+                </h:AppIcon>
+                <!-- Lock status icon: locked -->
+                <h:AppIcon Icon="{x:Static h:Icon.Lock}" Size="12"
+                           Foreground="{DynamicResource BrushWarning}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,6,0">
+                    <h:AppIcon.Style>
+                        <Style TargetType="h:AppIcon">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </h:AppIcon.Style>
+                </h:AppIcon>
+
+                <!-- Status text -->
+                <TextBlock FontSize="{DynamicResource FontSizeCaption}"
+                           VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="已解锁" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                    <Setter Property="Text" Value="已锁定" />
+                                    <Setter Property="Foreground" Value="{DynamicResource BrushWarning}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <!-- Separator dot -->
+                <TextBlock Text=" · "
+                           FontSize="{DynamicResource FontSizeCaption}"
+                           Foreground="{DynamicResource BrushTextTertiary}"
+                           VerticalAlignment="Center"
+                           Margin="6,0" />
+
+                <!-- Entry count -->
+                <TextBlock FontSize="{DynamicResource FontSizeCaption}"
+                           Foreground="{DynamicResource BrushTextSecondary}"
+                           VerticalAlignment="Center">
+                    <Run Text="{Binding TotalEntries, Mode=OneWay}" />
+                    <Run Text=" 条记录" />
+                </TextBlock>
+
+                <!-- Separator dot -->
+                <TextBlock Text=" · "
+                           FontSize="{DynamicResource FontSizeCaption}"
+                           Foreground="{DynamicResource BrushTextTertiary}"
+                           VerticalAlignment="Center"
+                           Margin="6,0" />
+
+                <!-- Last backup -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="最近备份: "
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushTextTertiary}"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding LastBackupTime, Converter={StaticResource RelativeTime}}"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Right side: status message -->
+            <TextBlock Grid.Column="1"
+                       Text="{Binding StatusMessage}"
+                       FontSize="{DynamicResource FontSizeCaption}"
+                       Foreground="{DynamicResource BrushTextTertiary}"
+                       VerticalAlignment="Center" />
+        </Grid>
+    </Border>
+</UserControl>
+

@@ -1,0 +1,60 @@
+# Visual Studio and user-specific files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.rsuser
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+_ReSharper*/
+
+# .NET build output
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+[Pp]ublish/
+TestResults/
+*.nupkg
+*.snupkg
+*.pubxml.user
+
+# Coverage and profiling output
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+BenchmarkDotNet.Artifacts/
+
+# NuGet working directories
+packages/
+!.nuget/packages/
+
+# Logs and crash dumps
+[Ll]og/
+[Ll]ogs/
+*.log
+*.dmp
+
+# CipherVault data and security-sensitive local artifacts
+*.cvault
+*.cvault-export
+[Bb]ackups/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.pfx
+
+# Operating-system files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+~$*

@@ -1,10 +1,12 @@
 # CipherVault
 
+简体中文 | [English](README.en.md)
+
 **一款面向 Windows 的本地密码管理器。** 将账号、密码和备注收纳在自己的加密保险库中，离线搜索、分类和备份。
 
 [下载最新版本](https://github.com/Xie-Fantasy/CipherVault/releases/latest) · [反馈问题](https://github.com/Xie-Fantasy/CipherVault/issues)
 
-> 本仓库公开提供程序和使用说明，当前不包含源代码。程序尚未经过独立安全审计，请保留可靠的备份，并根据自己的风险承受能力使用。
+> 程序尚未经过独立安全审计，请保留可靠的备份，并根据自己的风险承受能力使用。
 
 ## 界面预览
 
@@ -60,3 +62,16 @@ CipherVault 面向纯本地使用，不提供云同步。保险库使用 AES-256
 ## 反馈
 
 欢迎通过 [Issues](https://github.com/Xie-Fantasy/CipherVault/issues) 报告问题或提出建议。请提供程序版本、Windows 版本和复现步骤，并移除个人信息及敏感数据。
+
+## 从源码构建
+
+需要 Windows、.NET 8 SDK；如使用 Visual Studio，请安装“.NET 桌面开发”工作负载。
+
+```powershell
+dotnet restore .\CipherVault.sln
+dotnet build .\CipherVault.sln -c Release
+dotnet test .\CipherVault.sln -c Release
+dotnet run --project .\src\CipherVault.App\CipherVault.App.csproj
+```
+
+打包脚本 `build-installer.ps1` 可生成便携版和 MSI，需具备网络访问以还原构建依赖。源码以 [MIT 许可证](LICENSE)发布；第三方组件遵循各自的许可证。

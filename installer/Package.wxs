@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="CipherVault"
+           Manufacturer="CipherVault"
+           Version="$(ProductVersion)"
+           UpgradeCode="C030469C-0A01-46A7-B86F-8FD2C1FCED1E"
+           Scope="perMachine"
+           Language="2052"
+           InstallerVersion="500">
+
+    <SummaryInformation Description="CipherVault 本地密码管理器"
+                        Manufacturer="CipherVault" />
+    <MajorUpgrade DowngradeErrorMessage="已安装更高版本的 CipherVault。" />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="CipherVaultIcon.ico" SourceFile="..\src\CipherVault.App\Resources\CipherVault.ico" />
+    <Property Id="ARPPRODUCTICON" Value="CipherVaultIcon.ico" />
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLFOLDER" Name="CipherVault">
+        <Component Id="MainExecutable" Guid="*">
+          <File Id="CipherVaultExecutable"
+                Source="!(bindpath.publish)\CipherVault.exe"
+                KeyPath="yes">
+            <Shortcut Id="StartMenuShortcut"
+                      Directory="ProgramMenuFolder"
+                      Name="CipherVault"
+                      Description="安全的本地密码管理器"
+                      WorkingDirectory="INSTALLFOLDER"
+                      Icon="CipherVaultIcon.ico"
+                      IconIndex="0"
+                      Advertise="yes" />
+            <Shortcut Id="DesktopShortcut"
+                      Directory="DesktopFolder"
+                      Name="CipherVault"
+                      Description="安全的本地密码管理器"
+                      WorkingDirectory="INSTALLFOLDER"
+                      Icon="CipherVaultIcon.ico"
+                      IconIndex="0"
+                      Advertise="yes" />
+          </File>
+        </Component>
+      </Directory>
+    </StandardDirectory>
+  </Package>
+</Wix>

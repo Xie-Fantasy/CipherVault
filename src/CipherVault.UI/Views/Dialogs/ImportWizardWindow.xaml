@@ -1,0 +1,402 @@
+<Window x:Class="CipherVault.UI.Views.Dialogs.ImportWizardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CipherVault.UI.ViewModels"
+        xmlns:conv="clr-namespace:CipherVault.UI.Converters"
+        xmlns:loc="clr-namespace:CipherVault.UI.Localization"
+        xmlns:h="clr-namespace:CipherVault.UI.Helper"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:ImportViewModel}"
+        Title="导入密码"
+        Width="700" Height="550"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="{DynamicResource BrushBackground}"
+        WindowStyle="None"
+        AllowsTransparency="False">
+
+    <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisInv" IsInverted="True" />
+        <conv:StepToVisibilityConverter x:Key="StepToVis" />
+        <conv:ImportFinishedToVisibilityConverter x:Key="FinishedToVis" />
+        <conv:ImportFinishedToInverseVisibilityConverter x:Key="FinishedToInverseVis" />
+        <conv:LocalizedFormatConverter x:Key="LocalizedFormat" />
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      CornerRadius="12"
+                      GlassFrameThickness="0"
+                      ResizeBorderThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border CornerRadius="12"
+            Background="{DynamicResource BrushBackground}"
+            BorderBrush="{DynamicResource BrushBorder}"
+            BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="0" BlurRadius="20" Opacity="0.15" />
+        </Border.Effect>
+
+        <DockPanel Margin="32">
+            <!-- Header -->
+            <Border DockPanel.Dock="Top" Margin="0,0,0,24">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <h:AppIcon Grid.Column="0"
+                               Icon="{x:Static h:Icon.Info}"
+                               Size="20"
+                               Foreground="{DynamicResource BrushPrimary}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0" />
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="导入密码"
+                                   FontSize="{DynamicResource FontSizeTitle}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                        <TextBlock Text="{Binding StepIndicatorText}"
+                                   FontSize="{DynamicResource FontSizeCaption}"
+                                   Foreground="{DynamicResource BrushTextSecondary}"
+                                   Margin="0,2,0,0" />
+                    </StackPanel>
+
+                    <Button Grid.Column="2"
+                            Style="{StaticResource IconButton}"
+                            Click="CloseButton_Click"
+                            ToolTip="关闭">
+                        <h:AppIcon Icon="{x:Static h:Icon.X}" Size="14" />
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Navigation buttons (bottom) -->
+            <Border DockPanel.Dock="Bottom" Margin="0,20,0,0"
+                    Visibility="{Binding IsImportFinished, Converter={StaticResource FinishedToInverseVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Style="{StaticResource GhostButton}"
+                            Content="上一步"
+                            Command="{Binding PreviousStepCommand}"
+                            IsEnabled="{Binding CanGoBack}"
+                            Width="100" />
+
+                    <Button Grid.Column="2"
+                            Style="{StaticResource GhostButton}"
+                            Content="取消"
+                            Command="{Binding CancelCommand}"
+                            Width="80"
+                            Margin="0,0,8,0" />
+
+                    <Button Grid.Column="3"
+                            Content="下一步"
+                            Command="{Binding NextStepCommand}"
+                            IsEnabled="{Binding CanGoNext}"
+                            Width="120">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource FlatButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="4">
+                                        <Setter Property="Content" Value="开始导入" />
+                                        <Setter Property="Command" Value="{Binding StartImportCommand}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Step content -->
+            <Grid>
+                <!-- Step 1: File selection -->
+                <StackPanel Visibility="{Binding CurrentStep, Converter={StaticResource StepToVis}, ConverterParameter=1}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <!-- Drop zone -->
+                    <Border x:Name="DropZone"
+                            Width="400" Height="200"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Background="{DynamicResource BrushSurface}"
+                            AllowDrop="True"
+                            Drop="DropZone_Drop"
+                            DragOver="DropZone_DragOver"
+                            MouseLeftButtonDown="DropZone_Click">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <h:AppIcon Icon="{x:Static h:Icon.Download}"
+                                       Size="40"
+                                       Foreground="{DynamicResource BrushTextTertiary}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,12" />
+                            <TextBlock Text="拖拽 CSV 文件到此处"
+                                       FontSize="{DynamicResource FontSizeBody}"
+                                       Foreground="{DynamicResource BrushTextSecondary}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,4" />
+                            <TextBlock Text="或点击选择文件"
+                                       FontSize="{DynamicResource FontSizeCaption}"
+                                       Foreground="{DynamicResource BrushTextTertiary}"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Selected file name -->
+                    <TextBlock Text="{Binding SelectedFileName}"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushPrimary}"
+                               HorizontalAlignment="Center"
+                               Margin="0,12,0,0"
+                               Visibility="{Binding SelectedFileName, Converter={StaticResource BoolToVis}}" />
+
+                    <!-- Error message -->
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushDanger}"
+                               HorizontalAlignment="Center"
+                               Margin="0,8,0,0"
+                               Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- Step 2: Format detection + field mapping -->
+                <StackPanel Visibility="{Binding CurrentStep, Converter={StaticResource StepToVis}, ConverterParameter=2}">
+                    <!-- Detected format -->
+                    <Border Background="{DynamicResource BrushPrimarySubtle}"
+                            CornerRadius="6"
+                            Padding="12,10"
+                            Margin="0,0,0,16">
+                        <StackPanel Orientation="Horizontal">
+                            <h:AppIcon Icon="{x:Static h:Icon.Info}"
+                                       Size="16"
+                                       Foreground="{DynamicResource BrushPrimary}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0" />
+                            <TextBlock FontSize="{DynamicResource FontSizeBody}"
+                                       Foreground="{DynamicResource BrushPrimary}"
+                                       VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LocalizedFormat}"
+                                                  ConverterParameter="检测到格式: {0} CSV">
+                                        <Binding Path="DetectedFormat" />
+                                        <Binding Source="{x:Static loc:LocalizationManager.Instance}"
+                                                 Path="LanguageVersion" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Field mapping table -->
+                    <TextBlock Text="字段映射"
+                               FontSize="{DynamicResource FontSizeSubtitle}"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextPrimary}"
+                               Margin="0,0,0,10" />
+
+                    <Border Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="6">
+                        <DataGrid ItemsSource="{Binding FieldMappings}"
+                                  AutoGenerateColumns="False"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  RowBackground="{DynamicResource BrushSurface}"
+                                  AlternatingRowBackground="{DynamicResource BrushSurfaceHover}"
+                                  FontSize="{DynamicResource FontSizeBody}"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  Height="240">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="CSV 列" Width="*" IsReadOnly="True"
+                                                    Binding="{Binding CsvColumn}" />
+                                <DataGridComboBoxColumn Header="映射到" Width="*"
+                                                        SelectedItemBinding="{Binding MappedField, UpdateSourceTrigger=PropertyChanged}"
+                                                        ItemsSource="{Binding AvailableFields}" />
+                                <DataGridTextColumn Header="示例值" Width="2*" IsReadOnly="True"
+                                                    Binding="{Binding SampleValue}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </StackPanel>
+
+                <!-- Step 3: Data preview -->
+                <StackPanel Visibility="{Binding CurrentStep, Converter={StaticResource StepToVis}, ConverterParameter=3}">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="导入数据预览（前 10 行）"
+                                   FontSize="{DynamicResource FontSizeSubtitle}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                        <TextBlock FontSize="{DynamicResource FontSizeCaption}"
+                                   Foreground="{DynamicResource BrushTextSecondary}"
+                                   VerticalAlignment="Bottom"
+                                   Margin="8,0,0,2">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource LocalizedFormat}"
+                                              ConverterParameter=" (共 {0} 行)">
+                                    <Binding Path="TotalRowCount" />
+                                    <Binding Source="{x:Static loc:LocalizationManager.Instance}"
+                                             Path="LanguageVersion" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Border Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="6">
+                        <DataGrid ItemsSource="{Binding PreviewRows}"
+                                  AutoGenerateColumns="True"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="All"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  RowBackground="{DynamicResource BrushSurface}"
+                                  AlternatingRowBackground="{DynamicResource BrushSurfaceHover}"
+                                  FontSize="{DynamicResource FontSizeCaption}"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  Height="300"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Auto" />
+                    </Border>
+                </StackPanel>
+
+                <!-- Step 4: Target group + import -->
+                <StackPanel Visibility="{Binding CurrentStep, Converter={StaticResource StepToVis}, ConverterParameter=4}"
+                            VerticalAlignment="Center">
+                    <!-- Loading indicator -->
+                    <StackPanel Visibility="{Binding IsImporting, Converter={StaticResource BoolToVis}}"
+                                HorizontalAlignment="Center"
+                                Margin="0,0,0,24">
+                        <TextBlock Text="正在导入..."
+                                   FontSize="{DynamicResource FontSizeBody}"
+                                   Foreground="{DynamicResource BrushTextSecondary}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Target group selection -->
+                    <TextBlock Text="导入到分组"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               Margin="0,0,0,6"
+                               IsEnabled="{Binding IsImporting, Converter={StaticResource BoolToVisInv}}" />
+                    <ComboBox ItemsSource="{Binding Groups}"
+                              SelectedItem="{Binding SelectedTargetGroup}"
+                              Height="36"
+                              Margin="0,0,0,24"
+                              Width="300"
+                              HorizontalAlignment="Left"
+                              IsEnabled="{Binding IsImporting, Converter={StaticResource BoolToVisInv}}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <!-- Import summary -->
+                    <Border Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="20,16">
+                        <StackPanel>
+                            <TextBlock Text="导入摘要"
+                                       FontSize="{DynamicResource FontSizeSubtitle}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextPrimary}"
+                                       Margin="0,0,0,12" />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <Ellipse Width="8" Height="8" Fill="{DynamicResource BrushSuccess}"
+                                         VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <TextBlock FontSize="{DynamicResource FontSizeBody}"
+                                           Foreground="{DynamicResource BrushTextPrimary}"
+                                           VerticalAlignment="Center">
+                                    <Run Text="成功: " /><Run Text="{Binding ImportResult.SuccessCount, Mode=OneWay, FallbackValue=0}" /><Run Text=" 条" />
+                                </TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <Ellipse Width="8" Height="8" Fill="{DynamicResource BrushWarning}"
+                                         VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <TextBlock FontSize="{DynamicResource FontSizeBody}"
+                                           Foreground="{DynamicResource BrushTextPrimary}"
+                                           VerticalAlignment="Center">
+                                    <Run Text="跳过: " /><Run Text="{Binding ImportResult.SkippedCount, Mode=OneWay, FallbackValue=0}" /><Run Text=" 条" />
+                                </TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="8" Height="8" Fill="{DynamicResource BrushDanger}"
+                                         VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <TextBlock FontSize="{DynamicResource FontSizeBody}"
+                                           Foreground="{DynamicResource BrushTextPrimary}"
+                                           VerticalAlignment="Center">
+                                    <Run Text="失败: " /><Run Text="{Binding ImportResult.FailedCount, Mode=OneWay, FallbackValue=0}" /><Run Text=" 条" />
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Error message -->
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               Foreground="{DynamicResource BrushDanger}"
+                               Margin="0,12,0,0"
+                               Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- Result overlay (after import completes) -->
+                <StackPanel Visibility="{Binding IsImportFinished, Converter={StaticResource FinishedToVis}}"
+                            VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <h:AppIcon Icon="{x:Static h:Icon.CheckCircle}"
+                               Size="48"
+                               Foreground="{DynamicResource BrushSuccess}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,16" />
+                    <TextBlock Text="导入完成！"
+                               FontSize="{DynamicResource FontSizeTitle}"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextPrimary}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,8" />
+                    <TextBlock Text="{Binding ResultSummaryText}"
+                               FontSize="{DynamicResource FontSizeBody}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20" />
+                    <Button Style="{StaticResource FlatButton}"
+                            Content="完成"
+                            Width="120"
+                            HorizontalAlignment="Center"
+                            Click="FinishButton_Click" />
+                </StackPanel>
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>
